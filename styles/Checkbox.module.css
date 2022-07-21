@@ -1,0 +1,28 @@
+.checkboxCorrect,
+.checkboxEmpty,
+.checkboxIncorrect {
+    width: 48px;
+    height: 48px;
+    border: 1px solid #888888;
+    background-color: #0C1C27;
+    transition-duration: 150ms;
+}
+
+.checkboxCorrect {
+    background-color: #00ED64
+}
+
+.checkboxIncorrect {
+    background-color: #ed0000
+}
+
+@media (max-width: 467px) {
+    .checkboxCorrect,
+    .checkboxEmpty,
+    .checkboxIncorrect {
+      width: 32px;
+      height: 32px
+    }
+  }
+  
+  

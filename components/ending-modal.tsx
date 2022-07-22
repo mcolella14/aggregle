@@ -47,7 +47,7 @@ const EndingModal: React.FunctionComponent<HelpModalProps> = ({
           rel="noreferrer"
           href="https://www.youtube.com/watch?v=Nc6EfuSc-Fo"
         >
-          "There's always tomorrow"
+          &quot;There&apos;s always tomorrow&quot;
         </a>{' '}
         - Clarice the Reindeer
       </p>

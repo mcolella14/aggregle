@@ -30,11 +30,15 @@ const HelpModal: React.FunctionComponent<HelpModalProps> = ({ onClose }) => {
         <h3 className={styles.greenText}>Pipeline</h3>
         <p>
           This is where you write an{' '}
-          <a href="https://www.mongodb.com/docs/manual/core/aggregation-pipeline/">
+          <a
+            target="_blank"
+            rel="noreferrer"
+            href="https://www.mongodb.com/docs/manual/core/aggregation-pipeline/"
+          >
             Aggregation Pipeline
           </a>{' '}
           to transform the input into the output. This is what would be passed
-          as an argument if we were to call .
+          as an argument if we were to call{' '}
           <code className={styles.greenText}>{'input.aggregate'}</code>.
         </p>
         <p>

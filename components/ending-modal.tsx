@@ -36,9 +36,26 @@ const EndingModal: React.FunctionComponent<HelpModalProps> = ({
   success,
   tries,
 }) => {
-  const text = success
-    ? `You won in ${tries} ${tries > 1 ? 'tries' : 'try'}, nice job!`
-    : `Don't be sad, there's always tomorrow.`;
+  const text = success ? (
+    `You won in ${tries} ${tries > 1 ? 'tries' : 'try'}, nice job!`
+  ) : (
+    <span>
+      You lost today, but fear not:{'\n'}
+      <p>
+        <a
+          target="_blank"
+          rel="noreferrer"
+          href="https://www.youtube.com/watch?v=Nc6EfuSc-Fo"
+        >
+          "There's always tomorrow"
+        </a>{' '}
+        - Clarice the Reindeer
+      </p>
+      <span style={{ fontSize: '1rem' }}>
+        Or just like clear your cookies and try again...
+      </span>
+    </span>
+  );
   return (
     <div className={styles.backdrop}>
       <div className={styles.modal}>

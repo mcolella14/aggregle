@@ -5,9 +5,10 @@ import type { GetServerSideProps, NextPage } from 'next';
 import CodeMirror from '@uiw/react-codemirror';
 import { json } from '@codemirror/lang-json';
 import styles from '../styles/Home.module.css';
-import Checkbox, { CheckboxVariant } from '../components/Checkbox';
+import Checkbox, { CheckboxVariant } from '../components/checkbox';
 import HelpModal from '../components/help-modal';
 import EndingModal from '../components/ending-modal';
+import ErrorPopup from '../components/error-popup';
 
 interface Problem {
   _id: string;
@@ -22,6 +23,7 @@ interface HomeProps {
 const Home: NextPage<HomeProps> = ({ problem }) => {
   const [helpModalOpen, setHelpModalOpen] = useState(true);
   const [endingModalOpen, setEndingModalOpen] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const [isLoading, setIsLoading] = useState(false);
   const [attempts, setAttempts] = useState<{ [key: number]: CheckboxVariant }>({
@@ -35,8 +37,32 @@ const Home: NextPage<HomeProps> = ({ problem }) => {
   const [solution, setSolution] = useState<string>('[\n\n]');
   const [succeeded, setSucceded] = useState(false);
 
+  const errorMessage = (message: string, ms: number) => {
+    setError(message);
+    setTimeout(() => setError(null), ms);
+  };
+
   const onSubmit = async () => {
     if (currentTry > 5 || succeeded) {
+      return;
+    }
+
+    // Validate the json string solution.
+    try {
+      const solutionObject = JSON.parse(solution);
+      if (
+        !Array.isArray(solutionObject) ||
+        !solutionObject.every(obj => {
+          // console.log(obj.keys());
+          return (
+            typeof obj === 'object' && Array.from(Object.keys(obj)).length > 0
+          );
+        })
+      ) {
+        throw Error();
+      }
+    } catch {
+      errorMessage('Pipeline must be a valid JSON array of objects.', 3000);
       return;
     }
 
@@ -49,7 +75,7 @@ const Home: NextPage<HomeProps> = ({ problem }) => {
       });
     } catch (err: any) {
       setIsLoading(false);
-      console.error('Something went wrong, please try again');
+      errorMessage('Something went wrong, please try again', 3000);
       return;
     }
     setIsLoading(false);
@@ -116,31 +142,31 @@ const Home: NextPage<HomeProps> = ({ problem }) => {
             height="500px"
           />
         </div>
-
-        <footer className={styles.footer}>
-          <div className={styles.checkboxFlex}>
-            <Checkbox variant={attempts[1]} />
-            <Checkbox variant={attempts[2]} />
-            <Checkbox variant={attempts[3]} />
-            <Checkbox variant={attempts[4]} />
-            <Checkbox variant={attempts[5]} />
-          </div>
-
-          {isLoading ? (
-            <div className={styles.backdrop}>
-              <div className={styles.spinner} />
-            </div>
-          ) : (
-            <button className={styles.submit} onClick={onSubmit}>
-              Submit
-            </button>
-          )}
-        </footer>
       </div>
+      <footer className={styles.footer}>
+        <div className={styles.checkboxFlex}>
+          <Checkbox variant={attempts[1]} />
+          <Checkbox variant={attempts[2]} />
+          <Checkbox variant={attempts[3]} />
+          <Checkbox variant={attempts[4]} />
+          <Checkbox variant={attempts[5]} />
+        </div>
+
+        {isLoading ? (
+          <div className={styles.backdrop}>
+            <div className={styles.spinner} />
+          </div>
+        ) : (
+          <button className={styles.submit} onClick={onSubmit}>
+            Submit
+          </button>
+        )}
+      </footer>
       {helpModalOpen && <HelpModal onClose={() => setHelpModalOpen(false)} />}
       {endingModalOpen && (
         <EndingModal tries={currentTry} success={succeeded} />
       )}
+      {error && <ErrorPopup message={error} />}
     </>
   );
 };

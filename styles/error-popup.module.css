@@ -1,0 +1,13 @@
+.error {
+    position: fixed;
+    z-index: 11;
+    max-width: 200px;
+    border: 1px solid #888888;
+    border-radius: 6px;
+    background-color: #ff3f3f;
+    color: #282c34;
+    padding: 16px;
+    left: 24px;
+    top: 24px;
+    font-weight: 900;
+}

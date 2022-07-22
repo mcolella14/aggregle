@@ -1,4 +1,4 @@
-import styles from '../styles/Checkbox.module.css';
+import styles from '../styles/checkbox.module.css';
 
 export type CheckboxVariant = 'empty' | 'correct' | 'incorrect';
 

@@ -1,5 +1,5 @@
 .backdrop {
-    z-index: 99;
+    z-index: 11;
     top: 0;
     left: 0;
     position: fixed;
@@ -10,7 +10,7 @@
 
 .modal {
     position: relative;
-    z-index: 999;
+    z-index: 12;
     /* position: absolute; */
     max-width: 800px;
     border: 2px solid #888888;

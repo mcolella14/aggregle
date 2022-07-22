@@ -1,4 +1,3 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import axios from 'axios';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
@@ -38,7 +37,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { data } = await axios.post(`${url}?secret=${secret}`, body, {
     headers,
   });
-  console.log(data);
   res.status(200).json(data);
 };
 

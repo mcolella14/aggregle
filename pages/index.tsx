@@ -69,7 +69,6 @@ const Home: NextPage<HomeProps> = ({ problem }) => {
       if (
         !Array.isArray(solutionObject) ||
         !solutionObject.every(obj => {
-          // console.log(obj.keys());
           return (
             typeof obj === 'object' && Array.from(Object.keys(obj)).length > 0
           );
@@ -232,7 +231,6 @@ export const getServerSideProps: GetServerSideProps<{
 
   const headers = { 'api-key': apiKey };
 
-  // Get UTC epoch time.
   const localDate = new Date();
   const date = localDate.toISOString().split('T')[0];
   const body = {

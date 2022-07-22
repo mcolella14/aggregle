@@ -6,11 +6,12 @@ import Cookies from 'js-cookie';
 import CodeMirror from '@uiw/react-codemirror';
 import { json } from '@codemirror/lang-json';
 import styles from '../styles/Home.module.css';
-import Checkbox from '../components/checkbox';
-import type { CheckboxVariant } from '../components/checkbox';
+
 import HelpModal from '../components/help-modal';
 import EndingModal from '../components/ending-modal';
 import ErrorPopup from '../components/error-popup';
+import Checkbox from '../components/checkbox';
+import type { CheckboxVariant } from '../components/checkbox';
 
 import useDidUpdate from '../hooks/use-did-update';
 interface Problem {

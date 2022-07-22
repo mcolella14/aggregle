@@ -1,7 +1,6 @@
 import axios from 'axios';
 import type { NextApiRequest, NextApiResponse } from 'next';
-
-const { EJSON } = require('bson');
+import JSON5 from 'json5';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== 'POST') {
@@ -28,11 +27,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   };
 
   const { date, solution } = req.body;
-  // Filter out anything else.
-  const parsedSolution = EJSON.stringify(
-    EJSON.parse(solution, { relaxed: false })
-  );
-  const body = { date, solution };
+  // Parse to regular JSON.
+  const parsedSolution = JSON.stringify(JSON5.parse(solution));
+  const body = { date, solution: parsedSolution };
 
   const { data } = await axios.post(`${url}?secret=${secret}`, body, {
     headers,

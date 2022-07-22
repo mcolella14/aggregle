@@ -42,7 +42,10 @@ const HelpModal: React.FunctionComponent<HelpModalProps> = ({ onClose }) => {
           <code className={styles.greenText}>{'input.aggregate'}</code>.
         </p>
         <p>
-          <b>Please note that this must be formatted as valid JSON.</b>
+          <b>
+            Please note that this must be formatted as a valid array of
+            JavaScript objects.
+          </b>
         </p>
 
         <h3 className={styles.greenText}>Output</h3>

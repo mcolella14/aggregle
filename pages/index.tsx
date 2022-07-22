@@ -4,7 +4,7 @@ import type { GetServerSideProps, NextPage } from 'next';
 import Cookies from 'js-cookie';
 
 import CodeMirror from '@uiw/react-codemirror';
-import { json } from '@codemirror/lang-json';
+import { javascript } from '@codemirror/lang-javascript';
 import styles from '../styles/Home.module.css';
 
 import HelpModal from '../components/help-modal';
@@ -12,6 +12,8 @@ import EndingModal from '../components/ending-modal';
 import ErrorPopup from '../components/error-popup';
 import Checkbox from '../components/checkbox';
 import type { CheckboxVariant } from '../components/checkbox';
+
+import JSON5 from 'json5';
 
 import useDidUpdate from '../hooks/use-did-update';
 interface Problem {
@@ -64,20 +66,21 @@ const Home: NextPage<HomeProps> = ({ problem }) => {
     }
 
     // Validate the json string solution.
+    let solutionObject;
     try {
-      const solutionObject = JSON.parse(solution);
-      if (
-        !Array.isArray(solutionObject) ||
-        !solutionObject.every(obj => {
-          return (
-            typeof obj === 'object' && Array.from(Object.keys(obj)).length > 0
-          );
-        })
-      ) {
-        throw Error();
-      }
+      solutionObject = JSON5.parse(solution);
     } catch {
-      errorMessage('Pipeline must be a valid JSON array of objects.', 3000);
+      errorMessage('Pipeline must be a valid JavaScript array.', 3000);
+      return;
+    }
+
+    if (!Array.isArray(solutionObject)) {
+      errorMessage('Pipeline must be a JavaScript array.', 3000);
+      return;
+    }
+
+    if (!solutionObject.every(obj => typeof obj === 'object')) {
+      errorMessage('Pipeline array must only contain objects.', 3000);
       return;
     }
 
@@ -117,7 +120,7 @@ const Home: NextPage<HomeProps> = ({ problem }) => {
       return;
     }
     const { attempts, succeeded, solution, currentTry, date } =
-      JSON.parse(stateString);
+      JSON5.parse(stateString);
 
     if (date !== problem.date) {
       setHelpModalOpen(true);
@@ -159,8 +162,8 @@ const Home: NextPage<HomeProps> = ({ problem }) => {
         <div>
           <h3 className={styles.text}>Input</h3>
           <CodeMirror
-            value={JSON.stringify(problem.input, null, 4)}
-            extensions={[json()]}
+            value={JSON5.stringify(problem.input, null, 4)}
+            extensions={[javascript()]}
             editable={false}
             className={styles.codeBox}
             height="500px"
@@ -170,7 +173,7 @@ const Home: NextPage<HomeProps> = ({ problem }) => {
           <h3 className={styles.text}>Pipeline</h3>
           <CodeMirror
             value={solution}
-            extensions={[json()]}
+            extensions={[javascript()]}
             className={styles.editableCodeBox}
             height="500px"
             autoFocus
@@ -181,8 +184,8 @@ const Home: NextPage<HomeProps> = ({ problem }) => {
         <div>
           <h3 className={styles.text}>Output</h3>
           <CodeMirror
-            value={JSON.stringify(problem.output, null, 4)}
-            extensions={[json()]}
+            value={JSON5.stringify(problem.output, null, 4)}
+            extensions={[javascript()]}
             editable={false}
             className={styles.codeBox}
             height="500px"

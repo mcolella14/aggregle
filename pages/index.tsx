@@ -1,4 +1,4 @@
-import { useState, useEffect, useLayoutEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import type { GetServerSideProps, NextPage } from 'next';
 import Cookies from 'js-cookie';
@@ -6,7 +6,8 @@ import Cookies from 'js-cookie';
 import CodeMirror from '@uiw/react-codemirror';
 import { json } from '@codemirror/lang-json';
 import styles from '../styles/Home.module.css';
-import Checkbox, { CheckboxVariant } from '../components/checkbox';
+import Checkbox from '../components/checkbox';
+import type { CheckboxVariant } from '../components/checkbox';
 import HelpModal from '../components/help-modal';
 import EndingModal from '../components/ending-modal';
 import ErrorPopup from '../components/error-popup';

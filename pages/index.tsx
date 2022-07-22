@@ -55,8 +55,7 @@ const Home: NextPage<HomeProps> = ({ problem }) => {
       date: problem.date,
     };
     const stateString = JSON.stringify(state);
-    console.log('Setting Cookie:', attempts);
-    Cookies.set('aggregleState', stateString);
+    Cookies.set('aggregleState', stateString, { expires: 1 });
   };
 
   const onSubmit = async () => {

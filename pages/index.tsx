@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect, useLayoutEffect } from 'react';
 import axios from 'axios';
 import type { GetServerSideProps, NextPage } from 'next';
+import Cookies from 'js-cookie';
 
 import CodeMirror from '@uiw/react-codemirror';
 import { json } from '@codemirror/lang-json';
@@ -10,6 +11,7 @@ import HelpModal from '../components/help-modal';
 import EndingModal from '../components/ending-modal';
 import ErrorPopup from '../components/error-popup';
 
+import useDidUpdate from '../hooks/use-did-update';
 interface Problem {
   _id: string;
   input: object[];
@@ -21,7 +23,7 @@ interface HomeProps {
 }
 
 const Home: NextPage<HomeProps> = ({ problem }) => {
-  const [helpModalOpen, setHelpModalOpen] = useState(true);
+  const [helpModalOpen, setHelpModalOpen] = useState(false);
   const [endingModalOpen, setEndingModalOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -40,6 +42,19 @@ const Home: NextPage<HomeProps> = ({ problem }) => {
   const errorMessage = (message: string, ms: number) => {
     setError(message);
     setTimeout(() => setError(null), ms);
+  };
+
+  const setStateCookie = () => {
+    const state = {
+      attempts,
+      succeeded,
+      solution,
+      currentTry,
+      date: problem.date,
+    };
+    const stateString = JSON.stringify(state);
+    console.log('Setting Cookie:', attempts);
+    Cookies.set('aggregleState', stateString);
   };
 
   const onSubmit = async () => {
@@ -93,6 +108,37 @@ const Home: NextPage<HomeProps> = ({ problem }) => {
       setEndingModalOpen(true);
     }
   };
+
+  useEffect(() => {
+    const stateString = Cookies.get('aggregleState');
+    if (!stateString) {
+      setHelpModalOpen(true);
+      setStateCookie();
+      return;
+    }
+    const { attempts, succeeded, solution, currentTry, date } =
+      JSON.parse(stateString);
+
+    if (date !== problem.date) {
+      setHelpModalOpen(true);
+      setStateCookie();
+      return;
+    }
+
+    setAttempts(attempts);
+    setSucceded(succeeded);
+    setSolution(solution);
+    setCurrentTry(currentTry);
+
+    if (succeeded || currentTry > 5) {
+      setEndingModalOpen(true);
+    }
+  }, []);
+
+  useDidUpdate(() => {
+    setStateCookie();
+  }, [attempts, succeeded, solution, currentTry, problem.date]);
+
   if (!problem) {
     return <h2 className={styles.text}>Sorry, no problem today /:</h2>;
   }
